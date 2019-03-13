@@ -97,7 +97,7 @@ def test_gradients_pairwise_distances():
 def test_triplet_mask():
     """Test function _get_triplet_mask."""
     num_data = 64
-    num_classes = 10
+    num_classes = 102
 
     labels = np.random.randint(0, num_classes, size=(num_data)).astype(np.float32)
 
@@ -119,7 +119,7 @@ def test_triplet_mask():
 def test_anchor_positive_triplet_mask():
     """Test function _get_anchor_positive_triplet_mask."""
     num_data = 64
-    num_classes = 10
+    num_classes = 102
 
     labels = np.random.randint(0, num_classes, size=(num_data)).astype(np.float32)
 
@@ -140,7 +140,7 @@ def test_anchor_positive_triplet_mask():
 def test_anchor_negative_triplet_mask():
     """Test function _get_anchor_negative_triplet_mask."""
     num_data = 64
-    num_classes = 10
+    num_classes = 102
 
     labels = np.random.randint(0, num_classes, size=(num_data)).astype(np.float32)
 
@@ -164,7 +164,7 @@ def test_simple_batch_all_triplet_loss():
     There is just one class in this super simple edge case, and we want to make sure that
     the loss is 0.
     """
-    num_data = 10
+    num_data = 102
     feat_dim = 6
     margin = 0.2
     num_classes = 1
@@ -185,10 +185,10 @@ def test_simple_batch_all_triplet_loss():
 
 def test_batch_all_triplet_loss():
     """Test the triplet loss with batch all triplet mining"""
-    num_data = 10
+    num_data = 102
     feat_dim = 6
     margin = 0.2
-    num_classes = 5
+    num_classes = 51
 
     embeddings = np.random.rand(num_data, feat_dim).astype(np.float32)
     labels = np.random.randint(0, num_classes, size=(num_data)).astype(np.float32)
@@ -225,34 +225,3 @@ def test_batch_all_triplet_loss():
         assert np.allclose(num_positives / num_valid, fraction_val)
 
 
-def test_batch_hard_triplet_loss():
-    """Test the triplet loss with batch hard triplet mining"""
-    num_data = 50
-    feat_dim = 6
-    margin = 0.2
-    num_classes = 5
-
-    embeddings = np.random.rand(num_data, feat_dim).astype(np.float32)
-    labels = np.random.randint(0, num_classes, size=(num_data)).astype(np.float32)
-
-    for squared in [True, False]:
-        pdist_matrix = pairwise_distance_np(embeddings, squared=squared)
-
-        loss_np = 0.0
-        for i in range(num_data):
-            # Select the hardest positive
-            max_pos_dist = np.max(pdist_matrix[i][labels == labels[i]])
-
-            # Select the hardest negative
-            min_neg_dist = np.min(pdist_matrix[i][labels != labels[i]])
-
-            loss = np.maximum(0.0, max_pos_dist - min_neg_dist + margin)
-            loss_np += loss
-
-        loss_np /= num_data
-
-        # Compute the loss in TF.
-        loss_tf = batch_hard_triplet_loss(labels, embeddings, margin, squared=squared)
-        with tf.Session() as sess:
-            loss_tf_val = sess.run(loss_tf)
-        assert np.allclose(loss_np, loss_tf_val)
