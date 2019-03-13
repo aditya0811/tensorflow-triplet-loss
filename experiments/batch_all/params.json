@@ -12,9 +12,9 @@
     "squared": false,
 
     "image_size": 28,
-    "num_labels": 10,
-    "train_size": 50000,
-    "eval_size": 10000,
+    "num_labels": 102,
+    "train_size": 9145,
+    "eval_size": 1900,
 
     "num_parallel_calls": 4,
     "save_summary_steps": 50
