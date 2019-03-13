@@ -4,7 +4,6 @@ import numpy as np
 import tensorflow as tf
 
 from model.triplet_loss import batch_all_triplet_loss
-from model.triplet_loss import batch_hard_triplet_loss
 from model.triplet_loss import _pairwise_distances
 from model.triplet_loss import _get_triplet_mask
 from model.triplet_loss import _get_anchor_positive_triplet_mask
