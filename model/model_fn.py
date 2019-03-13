@@ -3,7 +3,6 @@
 import tensorflow as tf
 
 from model.triplet_loss import batch_all_triplet_loss
-from model.triplet_loss import batch_hard_triplet_loss
 
 
 def build_model(is_training, images, params):
