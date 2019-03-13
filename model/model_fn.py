@@ -76,9 +76,6 @@ def model_fn(features, labels, mode, params):
     if params.triplet_strategy == "batch_all":
         loss, fraction = batch_all_triplet_loss(labels, embeddings, margin=params.margin,
                                                 squared=params.squared)
-    elif params.triplet_strategy == "batch_hard":
-        loss = batch_hard_triplet_loss(labels, embeddings, margin=params.margin,
-                                       squared=params.squared)
     else:
         raise ValueError("Triplet strategy not recognized: {}".format(params.triplet_strategy))
 
